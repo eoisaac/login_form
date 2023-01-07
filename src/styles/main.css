@@ -24,10 +24,6 @@ body {
     font-normal text-neutral-500 antialiased;
 }
 
-.page {
-  @apply mt-16 min-h-screen flex-1 p-2 sm:p-4;
-}
-
 @layer base {
   html {
     scroll-behavior: smooth;

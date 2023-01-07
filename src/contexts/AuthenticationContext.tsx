@@ -1,5 +1,8 @@
-import { createContext, ReactNode, useState } from 'react'
+import { ReactNode, createContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
+import { RegisteredUsers } from '../@types/app'
+import { useLocalStorage } from '../hooks/useStorage'
 
 interface AuthenticationContextType {
   authenticated: boolean
@@ -8,7 +11,7 @@ interface AuthenticationContextType {
     userPassword: string,
     userConfirmPassword: string,
   ) => void
-  login: (userEmail: string, userPassword: string) => void
+  login: (userEmail: string, userPassword: string) => boolean
   logout: () => void
 }
 
@@ -25,6 +28,9 @@ export const AuthenticationContextProvider = ({
 }: AuthenticationContextProviderProps) => {
   const [authenticated, setAuthenticated] = useState(false)
 
+  const [registeredUsers, setRegisteredUsers] =
+    useLocalStorage<RegisteredUsers>('registeredUsers', {})
+
   const navigate = useNavigate()
 
   const signUp = (
@@ -32,21 +38,35 @@ export const AuthenticationContextProvider = ({
     userPassword: string,
     userConfirmPassword: string,
   ) => {
-    if (userEmail && userPassword === userConfirmPassword) {
-      login(userEmail, userPassword)
-    }
+    setRegisteredUsers((prevState) => ({
+      ...prevState,
+      [userEmail]: {
+        email: userEmail,
+        password: userPassword,
+      },
+    }))
+
+    setAuthenticated(true)
+    navigate('/')
   }
 
   const login = (userEmail: string, userPassword: string) => {
-    if (userEmail === 'email@email.com' && userPassword === 'email@email.com') {
+    const registered = registeredUsers[userEmail]
+
+    if (registered && registered.password === userPassword) {
       setAuthenticated(true)
       navigate('/')
+    } else {
+      toast.error(
+        "We couldn't find an account matching the email and password ",
+      )
     }
+    return authenticated
   }
 
   const logout = () => {
     setAuthenticated(false)
-    navigate('/')
+    navigate('/welcome')
   }
 
   return (

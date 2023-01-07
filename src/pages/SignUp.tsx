@@ -40,8 +40,12 @@ export const SignUp = () => {
     password,
     confirmPassword,
   }: SignUpFormFormData) => {
-    signUp(email, password, confirmPassword)
-    reset()
+    try {
+      signUp(email, password, confirmPassword)
+      reset()
+    } catch (e) {
+      console.log(e)
+    }
   }
 
   return (

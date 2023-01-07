@@ -27,11 +27,9 @@ export const Login = () => {
   const { formState, register, handleSubmit, reset } = LoginForm
   const { errors } = formState
 
-  const handleLoginSubmit = (data: LoginFormFormData) => {
-    const { email, password } = data
-
-    login(email, password)
-    reset()
+  const handleLoginSubmit = ({ email, password }: LoginFormFormData) => {
+    const authenticated = login(email, password)
+    authenticated && reset()
   }
 
   return (
@@ -48,19 +46,21 @@ export const Login = () => {
           className="flex flex-col items-center gap-4 sm:flex-auto"
           onSubmit={handleSubmit(handleLoginSubmit)}
         >
-          <InputField
-            label="Email"
-            icon={<At />}
-            register={register('email', { required: true })}
-            errorMessage={errors.email && errors.email.message}
-          />
-          <InputField
-            type="password"
-            label="Password"
-            icon={<Password />}
-            register={register('password', { required: true })}
-            errorMessage={errors.password && errors.password.message}
-          />
+          <div className="flex w-full flex-col gap-2">
+            <InputField
+              label="Email"
+              icon={<At />}
+              register={register('email', { required: true })}
+              errorMessage={errors.email && errors.email.message}
+            />
+            <InputField
+              type="password"
+              label="Password"
+              icon={<Password />}
+              register={register('password', { required: true })}
+              errorMessage={errors.password && errors.password.message}
+            />
+          </div>
           <fieldset className="mb-1 flex items-center justify-between">
             <Link to="/login" className="text-sm text-violet-500">
               Forgot password?
@@ -70,7 +70,7 @@ export const Login = () => {
 
           <div className="py-1 text-sm">
             <span>Don&apos;t have an account? </span>
-            <Link to="/login" className="text-violet-500">
+            <Link to="/signup" className="text-violet-500">
               Sign up
             </Link>
           </div>
