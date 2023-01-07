@@ -4,7 +4,10 @@ import './styles/main.css'
 
 export const App = () => {
   return (
-    <div className="bg-b-100 flex min-h-screen max-w-[100vw] overflow-y-auto">
+    <div
+      className="flex min-h-screen max-w-[100vw] overflow-y-auto 
+  bg-neutral-100"
+    >
       <BrowserRouter>
         <AppRoutes />
       </BrowserRouter>
