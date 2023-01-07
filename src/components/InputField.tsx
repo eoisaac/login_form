@@ -45,8 +45,11 @@ export const InputField = ({
       >
         {hasIcon && (
           <div
-            className="text-lg text-neutral-400
-          group-focus-within:text-violet-500"
+            className={`text-lg text-neutral-400 ${
+              hasError
+                ? 'text-rose-500 group-focus-within:border-rose-500'
+                : 'group-focus-within:text-violet-500'
+            }`}
           >
             {icon}
           </div>

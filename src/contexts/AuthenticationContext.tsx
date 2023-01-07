@@ -1,17 +1,18 @@
 import { ReactNode, createContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import { RegisteredUsers } from '../@types/app'
-import { useLocalStorage } from '../hooks/useStorage'
+import { RegisteredUsers, Session } from '../@types/app'
+import { useLocalStorage, useSessionStorage } from '../hooks/useStorage'
 
 interface AuthenticationContextType {
   authenticated: boolean
+  session: Session | null
   signUp: (
     userEmail: string,
     userPassword: string,
     userConfirmPassword: string,
   ) => void
-  login: (userEmail: string, userPassword: string) => boolean
+  login: (userEmail: string, userPassword: string, isNew?: boolean) => boolean
   logout: () => void
 }
 
@@ -27,6 +28,10 @@ export const AuthenticationContextProvider = ({
   children,
 }: AuthenticationContextProviderProps) => {
   const [authenticated, setAuthenticated] = useState(false)
+  const [session, setSession] = useSessionStorage<Session | null>(
+    'session',
+    null,
+  )
 
   const [registeredUsers, setRegisteredUsers] =
     useLocalStorage<RegisteredUsers>('registeredUsers', {})
@@ -46,20 +51,18 @@ export const AuthenticationContextProvider = ({
       },
     }))
 
-    setAuthenticated(true)
-    navigate('/')
+    login(userEmail, userPassword, true)
   }
 
-  const login = (userEmail: string, userPassword: string) => {
+  const login = (userEmail: string, userPassword: string, isNew?: boolean) => {
     const registered = registeredUsers[userEmail]
 
-    if (registered && registered.password === userPassword) {
+    if ((registered && registered.password === userPassword) || isNew) {
       setAuthenticated(true)
-      navigate('/')
+      navigate('/home')
+      toast.info('Welcome!')
     } else {
-      toast.error(
-        "We couldn't find an account matching the email and password ",
-      )
+      toast.error("We couldn't find an account matching the email and password")
     }
     return authenticated
   }
