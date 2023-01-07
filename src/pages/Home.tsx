@@ -1,4 +1,10 @@
+import { useContext } from 'react'
+import { Button } from '../components/Button'
+import { AuthenticationContext } from '../contexts/AuthenticationContext'
+
 export const Home = () => {
+  const { logout, session } = useContext(AuthenticationContext)
+
   return (
     <section className="flex flex-1 items-center justify-center">
       <div
@@ -11,7 +17,13 @@ export const Home = () => {
           </h1>
         </header>
 
-        <div className="flex items-center gap-4"></div>
+        <div className="flex items-center gap-4">
+          <div>
+            <span>Email: </span>
+            <span>{session?.user.email}</span>
+          </div>
+        </div>
+        <Button label="Logout" onClick={logout} />
       </div>
     </section>
   )

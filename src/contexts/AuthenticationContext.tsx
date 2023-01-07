@@ -59,6 +59,14 @@ export const AuthenticationContextProvider = ({
 
     if ((registered && registered.password === userPassword) || isNew) {
       setAuthenticated(true)
+
+      setSession({
+        date: new Date(),
+        user: {
+          email: userEmail,
+          password: userPassword,
+        },
+      })
       navigate('/home')
       toast.info('Welcome!')
     } else {
@@ -69,12 +77,14 @@ export const AuthenticationContextProvider = ({
 
   const logout = () => {
     setAuthenticated(false)
+    setSession(null)
+    toast.info('Bye!')
     navigate('/welcome')
   }
 
   return (
     <AuthenticationContext.Provider
-      value={{ authenticated, signUp, login, logout }}
+      value={{ authenticated, session, signUp, login, logout }}
     >
       {children}
     </AuthenticationContext.Provider>
