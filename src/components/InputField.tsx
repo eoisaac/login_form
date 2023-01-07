@@ -24,20 +24,24 @@ export const InputField = ({
   const hasIcon = Boolean(icon)
 
   return (
-    <label className="group relative my-1 w-full">
+    <label className="group relative my-2 w-full">
       <span
         className={`${
           srLabel
             ? 'sr-only'
-            : 'block pl-2 text-left text-sm font-medium text-neutral-500'
+            : 'block pl-1 text-left text-sm font-medium text-neutral-500'
         }`}
       >
         {label}
       </span>
       <div
-        className="flex flex-1 items-center gap-2 overflow-hidden rounded-md
-        border-2 border-neutral-200 bg-white px-2 py-1 shadow-sm
-        transition-all duration-200 group-focus-within:border-violet-500"
+        className={`flex flex-1 items-center gap-2 overflow-hidden rounded-md
+        border-2  bg-white px-2 py-1 shadow-sm
+        transition-all duration-200  ${
+          hasError
+            ? 'border-rose-500 group-focus-within:border-rose-500'
+            : 'border-neutral-200 group-focus-within:border-violet-500'
+        }`}
       >
         {hasIcon && (
           <div
@@ -56,7 +60,7 @@ export const InputField = ({
         />
       </div>
       {hasError && (
-        <span className="absolute top-full block pl-2 text-sm text-rose-500">
+        <span className="absolute top-full block pl-1 text-sm text-rose-500">
           {errorMessage}
         </span>
       )}

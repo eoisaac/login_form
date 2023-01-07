@@ -1,4 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
+import { At, Password } from 'phosphor-react'
 import { useContext } from 'react'
 import { useForm } from 'react-hook-form'
 import { Link } from 'react-router-dom'
@@ -11,10 +12,10 @@ export const Login = () => {
   const { login } = useContext(AuthenticationContext)
 
   const LoginFormSchema = zod.object({
-    email: zod.string().email(),
+    email: zod.string().email({ message: 'Invalid email!' }),
     password: zod
       .string()
-      .min(8, { message: 'Must be 8 or more characters long' }),
+      .min(8, { message: 'Must be 8 or more characters long!' }),
   })
 
   type LoginFormFormData = zod.infer<typeof LoginFormSchema>
@@ -34,27 +35,29 @@ export const Login = () => {
   }
 
   return (
-    <section className="grid flex-1 place-items-center">
-      <section
-        className="flex w-full max-w-md flex-col gap-4 rounded-md 
-      bg-white p-4 shadow-md"
+    <section className="flex flex-1 items-center justify-center">
+      <div
+        className="flex h-full w-full max-w-md flex-col justify-center gap-4
+      rounded-md bg-white p-4 shadow-md sm:h-auto"
       >
         <header>
           <h1 className="text-2xl font-bold text-neutral-800">Log in</h1>
           <p>Enter your credentials to access your account.</p>
         </header>
         <form
-          className="flex flex-col items-center gap-2"
+          className="flex flex-col items-center gap-4 sm:flex-auto"
           onSubmit={handleSubmit(handleLoginSubmit)}
         >
           <InputField
             label="Email"
+            icon={<At />}
             register={register('email', { required: true })}
             errorMessage={errors.email && errors.email.message}
           />
           <InputField
-            label="Password"
             type="password"
+            label="Password"
+            icon={<Password />}
             register={register('password', { required: true })}
             errorMessage={errors.password && errors.password.message}
           />
@@ -65,14 +68,14 @@ export const Login = () => {
           </fieldset>
           <Button type="submit" label="Login" variant="primary" />
 
-          <div className="text-sm">
+          <div className="py-1 text-sm">
             <span>Don&apos;t have an account? </span>
             <Link to="/login" className="text-violet-500">
               Sign up
             </Link>
           </div>
         </form>
-      </section>
+      </div>
     </section>
   )
 }

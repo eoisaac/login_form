@@ -1,8 +1,13 @@
-import { createContext, ReactNode, useEffect, useState } from 'react'
+import { createContext, ReactNode, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 interface AuthenticationContextType {
   authenticated: boolean
+  signUp: (
+    userEmail: string,
+    userPassword: string,
+    userConfirmPassword: string,
+  ) => void
   login: (userEmail: string, userPassword: string) => void
   logout: () => void
 }
@@ -22,6 +27,16 @@ export const AuthenticationContextProvider = ({
 
   const navigate = useNavigate()
 
+  const signUp = (
+    userEmail: string,
+    userPassword: string,
+    userConfirmPassword: string,
+  ) => {
+    if (userEmail && userPassword === userConfirmPassword) {
+      login(userEmail, userPassword)
+    }
+  }
+
   const login = (userEmail: string, userPassword: string) => {
     if (userEmail === 'email@email.com' && userPassword === 'email@email.com') {
       setAuthenticated(true)
@@ -29,14 +44,15 @@ export const AuthenticationContextProvider = ({
     }
   }
 
-  const logout = () => {}
-
-  useEffect(() => {
-    console.log(authenticated)
-  }, [authenticated])
+  const logout = () => {
+    setAuthenticated(false)
+    navigate('/')
+  }
 
   return (
-    <AuthenticationContext.Provider value={{ authenticated, login, logout }}>
+    <AuthenticationContext.Provider
+      value={{ authenticated, signUp, login, logout }}
+    >
       {children}
     </AuthenticationContext.Provider>
   )
